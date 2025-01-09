@@ -39,7 +39,7 @@ export const loginUser = async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: oneDay,
-    // sameSite: "strict",
+    sameSite: "None",
     // ,  Optional, to enhance CSRF protection
   });
 
