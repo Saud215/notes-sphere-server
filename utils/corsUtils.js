@@ -1,8 +1,4 @@
-const allowedOrigins = [
-  "https://notes-sphere.onrender.com",
-  "http://localhost:5173",
-  "http://localhost:6300",
-];
+const allowedOrigins = ["https://notes-sphere-server.onrender.com"];
 
 const corsOptions = {
   origin: (origin, callback) => {
