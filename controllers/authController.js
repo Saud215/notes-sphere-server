@@ -36,11 +36,10 @@ export const loginUser = async (req, res) => {
   const oneDay = 24 * 60 * 60 * 1000;
 
   res.cookie("token", token, {
-    // httpOnly: true,
+    httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: oneDay,
-    // sameSite: "None",
-    // ,  Optional, to enhance CSRF protection
+    sameSite: "None",
   });
 
   const formattedUser = user.withoutPassword();
