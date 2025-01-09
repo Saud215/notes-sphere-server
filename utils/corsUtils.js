@@ -1,4 +1,4 @@
-const allowedOrigins = ["https://notes-sphere-server.onrender.com"];
+const allowedOrigins = ["https://notes-sphere.onrender.com"];
 
 const corsOptions = {
   origin: (origin, callback) => {
