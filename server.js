@@ -34,22 +34,22 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
 
+// server routes
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/notes", authenticateUser, noteRoutes);
+app.use("/api/v1/users", authenticateUser, userRoutes);
+
 // Server Landing Page
-app.use("/", express.static(path.join(import.meta.dirname, "public")));
-app.get("/", (req, res) => {
+app.use(express.static(path.join(import.meta.dirname, "public")));
+app.get("*", (req, res) => {
   res
     .status(StatusCodes.OK)
-    .sendFile(path.join(import.meta.dirname, "views", "index.html"));
+    .sendFile(path.join(import.meta.dirname, "public", "index.html"));
 });
 
 app.get("/testing", (req, res) => {
   res.status(StatusCodes.OK).json({ success: true, msg: "Welcome" });
 });
-
-// server routes
-app.use("/api/v1/auth", authRoutes);
-app.use("/api/v1/notes", authenticateUser, noteRoutes);
-app.use("/api/v1/users", authenticateUser, userRoutes);
 
 // not found middleware
 app.all("*", notFound);
