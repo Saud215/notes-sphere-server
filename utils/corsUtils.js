@@ -2,14 +2,17 @@ const allowedOrigins = ["https://notes-sphere.onrender.com"];
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true); // Allow the request
+    if (origin && allowedOrigins.includes(origin)) {
+      // If the origin is in the allowed list, allow the request
+      callback(null, true);
     } else {
-      callback(new Error("Not allowed by CORS")); // Deny the request
+      // If the origin is missing or not in the list, block the request
+
+      callback(new Error("Not allowed by CORS"));
     }
   },
-  credentials: true,
-  optionsSuccessStatus: 200,
+  credentials: true, // Enable credentials (cookies, authorization headers, etc.)
+  optionsSuccessStatus: 200, // For older browsers like IE11
 };
 
 export default corsOptions;
