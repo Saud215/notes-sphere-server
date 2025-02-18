@@ -9,6 +9,7 @@ import morgan from "morgan";
 import path from "path";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import cloudinary from "cloudinary";
 import { StatusCodes } from "http-status-codes";
 
 import corsOptions from "./utils/corsUtils.js";
@@ -30,6 +31,12 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET,
+});
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
@@ -39,16 +46,12 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/notes", authenticateUser, noteRoutes);
 app.use("/api/v1/users", authenticateUser, userRoutes);
 
-// Server Landing Page
+//Frontend served Publicly
 app.use(express.static(path.join(import.meta.dirname, "public")));
 app.get("*", (req, res) => {
   res
     .status(StatusCodes.OK)
     .sendFile(path.join(import.meta.dirname, "public", "index.html"));
-});
-
-app.get("/testing", (req, res) => {
-  res.status(StatusCodes.OK).json({ success: true, msg: "Welcome" });
 });
 
 // not found middleware

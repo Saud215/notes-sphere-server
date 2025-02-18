@@ -1,7 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 import { NotFoundError } from "../errors/customErrors.js";
 import User from "../models/User.js";
-import { json } from "express";
+import cloudinary from "cloudinary";
+import { promises as fs } from "fs";
 
 export const getAllUsers = async (req, res) => {
   const users = await User.find({});
@@ -24,22 +25,31 @@ export const getCurrentUser = async (req, res) => {
 
 export const updateCurrentUser = async (req, res) => {
   const { id } = req.params;
-  const { username, email, isActive } = req.body;
+  const updatedUser = req.body;
 
-  const user = await User.findByIdAndUpdate(
-    id,
-    { username, email, isActive },
-    {
-      new: true,
-    }
-  ).exec();
+  if (req.file) {
+    const resp = await cloudinary.v2.uploader.upload(req.file.path);
+    console.log(resp);
+    await fs.unlink(req.file.path);
+    updatedUser.avatar = resp.secure_url;
+    updatedUser.avatarPublicId = resp.public_id;
+  }
+
+  // exec() returns a promise from a mongoose thenable
+  const user = await User.findByIdAndUpdate(id, updatedUser).exec();
+
+  if (req.file && user.avatarPublicId) {
+    await cloudinary.v2.uploader.destroy(user.avatarPublicId);
+  }
+
   const formattedUser = user.withoutPassword();
 
   res.status(StatusCodes.OK).json({
     success: true,
-    user: formattedUser,
+    msg: "User Updated Successfully!",
   });
 };
+
 export const deleteUser = async (req, res) => {
   const { id } = req.params;
 

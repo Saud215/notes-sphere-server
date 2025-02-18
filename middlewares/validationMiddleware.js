@@ -129,13 +129,17 @@ export const validateUpdateUserInput = withValidationErrors([
     .withMessage("Username length should be between 3 to 24 characters long!")
     .isAlphanumeric()
     .withMessage("Only numbers and alphabets are allowed!")
-    .custom(async (username) => {
-      const user = await User.findOne({ username });
+    .custom(async (username, { req }) => {
+      const currentUser = await User.findById(req.user.userId);
 
-      if (user)
-        throw new BadRequestError(
-          "Entered username already exists, please enter a new unique username!"
-        );
+      if (currentUser.username !== username) {
+        const anotherUser = await User.findOne({ username });
+
+        if (anotherUser)
+          throw new BadRequestError(
+            "Entered username is already owned by someone else, please enter a new unique username!"
+          );
+      }
     })
     .trim()
     .optional(),

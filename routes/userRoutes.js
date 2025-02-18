@@ -10,6 +10,7 @@ import {
   validateUpdateUserInput,
 } from "../middlewares/validationMiddleware.js";
 import adminRoute from "../middlewares/adminRouteMiddleware.js";
+import upload from "../middlewares/multerMiddleware.js";
 
 const router = Router();
 
@@ -17,7 +18,7 @@ router.get("/", [adminRoute], getAllUsers); // admin route
 router.get("/current-user", getCurrentUser); //user route
 router.patch(
   "/update-user/:id",
-  [validateIdParam, validateUpdateUserInput],
+  [validateIdParam, upload.single("avatar"), validateUpdateUserInput],
   updateCurrentUser
 ); //user route
 router.delete("/delete-user/:id", [adminRoute, validateIdParam], deleteUser); // admin route
