@@ -21,7 +21,6 @@ import notFound from "./middlewares/notFoundMiddleware.js";
 import errorHandler from "./middlewares/errorHandlerMiddleware.js";
 import authenticateUser from "./middlewares/authenticationMiddleware.js";
 
-// backend chapters 8 and 12 sums up to just two lessons
 // one is the usage of two tokens method for the auth with new status code like 204/409 noContent/conflict
 // and new custom hooks build with useEffect to make the document title dynamic.
 
